@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  helpdesk-db:
+    image: postgres:15-alpine
+    container_name: helpdesk-db-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: HelpdeskDB
+    ports:
+      - "5433:5432"
+    volumes:
+      - helpdesk-db-data:/var/lib/postgresql/data
+
+  helpdesk-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: helpdesk-api-container
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=helpdesk-db;Port=5432;Database=HelpdeskDB;Username=postgres;Password=postgres
+      - ApplyMigrationsOnStartup=true
+    depends_on:
+      - helpdesk-db
+
+volumes:
+  helpdesk-db-data:
