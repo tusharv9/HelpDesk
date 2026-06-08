@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../services/api';
+import { api } from '../services/api.js';
 import { ArrowLeft, Save } from 'lucide-react';
 
-export const CreateTicket: React.FC = () => {
+export const CreateTicket = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Hardware');
-  const [priority, setPriority] = useState<'Low' | 'Medium' | 'High' | 'Critical'>('Low');
+  const [priority, setPriority] = useState('Low');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !description || !category) {
       setError('All fields are required.');
@@ -25,7 +25,7 @@ export const CreateTicket: React.FC = () => {
     try {
       await api.createTicket({ title, description, category, priority });
       navigate('/tickets');
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || 'Failed to create ticket. Verify authorization.');
       setSubmitting(false);
     }
@@ -87,7 +87,7 @@ export const CreateTicket: React.FC = () => {
             <select
               className="form-control"
               value={priority}
-              onChange={(e) => setPriority(e.target.value as any)}
+              onChange={(e) => setPriority(e.target.value)}
             >
               <option value="Low">Low (General Query)</option>
               <option value="Medium">Medium (Affects daily operations)</option>

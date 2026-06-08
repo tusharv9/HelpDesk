@@ -1,22 +1,20 @@
-version: '3.8'
-
 services:
   helpdesk-db:
-    image: postgres:15-alpine
-    container_name: helpdesk-db-container
+    image: postgres
+    container_name: helpdesk-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: HelpdeskDB
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - helpdesk-db-data:/var/lib/postgresql/data
 
   helpdesk-api:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Containerfile
     container_name: helpdesk-api-container
     ports:
       - "5000:8080"

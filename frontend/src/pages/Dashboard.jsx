@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { api, type Ticket } from '../services/api';
+import { useEffect, useState } from 'react';
+import { api } from '../services/api.js';
 import { CheckCircle, Clock, FileText, Inbox, ShieldAlert } from 'lucide-react';
 
-export const Dashboard: React.FC = () => {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
+export const Dashboard = () => {
+  const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -28,7 +28,7 @@ export const Dashboard: React.FC = () => {
   const resolved = tickets.filter(t => t.status === 'Resolved').length;
   const critical = tickets.filter(t => t.priority === 'Critical' || t.priority === 'High').length;
 
-  const categories: Record<string, number> = {};
+  const categories = {};
   tickets.forEach(t => {
     categories[t.category] = (categories[t.category] || 0) + 1;
   });

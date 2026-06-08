@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api, type Ticket, getCurrentUser } from '../services/api';
+import { api } from '../services/api.js';
 import { Eye, Edit2, Trash2, Plus, Search } from 'lucide-react';
 
-export const TicketList: React.FC = () => {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
+export const TicketList = () => {
+  const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
@@ -12,8 +12,6 @@ export const TicketList: React.FC = () => {
   const [priorityFilter, setPriorityFilter] = useState('');
   const [assignedFilter, setAssignedFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  
-  const currentUser = getCurrentUser();
 
   const fetchTickets = () => {
     setLoading(true);
@@ -34,15 +32,16 @@ export const TicketList: React.FC = () => {
 
   useEffect(() => {
     fetchTickets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter, priorityFilter, assignedFilter]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id) => {
     if (window.confirm(`Are you sure you want to delete ticket #${id}?`)) {
       try {
         await api.deleteTicket(id);
         setTickets(tickets.filter(t => t.id !== id));
-      } catch (err: any) {
-        alert(err.message || 'Failed to delete ticket. Make sure you have Admin role.');
+      } catch (err) {
+        alert(err.message || 'Failed to delete ticket.');
       }
     }
   };
@@ -166,17 +165,13 @@ export const TicketList: React.FC = () => {
                           <Eye size={16} />
                         </Link>
                         
-                        {(currentUser.role === 'Admin' || currentUser.role === 'SupportAgent') && (
-                          <Link to={`/update/${t.id}`} className="btn btn-secondary" style={{ padding: '8px 12px', borderColor: 'var(--border-glow)' }} title="Edit ticket">
-                            <Edit2 size={16} style={{ color: 'var(--primary)' }} />
-                          </Link>
-                        )}
+                        <Link to={`/update/${t.id}`} className="btn btn-secondary" style={{ padding: '8px 12px', borderColor: 'var(--border-glow)' }} title="Edit ticket">
+                          <Edit2 size={16} style={{ color: 'var(--primary)' }} />
+                        </Link>
 
-                        {currentUser.role === 'Admin' && (
-                          <button onClick={() => handleDelete(t.id)} className="btn btn-secondary" style={{ padding: '8px 12px' }} title="Delete ticket">
-                            <Trash2 size={16} style={{ color: 'var(--danger)' }} />
-                          </button>
-                        )}
+                        <button onClick={() => handleDelete(t.id)} className="btn btn-secondary" style={{ padding: '8px 12px' }} title="Delete ticket">
+                          <Trash2 size={16} style={{ color: 'var(--danger)' }} />
+                        </button>
                       </div>
                     </td>
                   </tr>

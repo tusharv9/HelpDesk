@@ -36,7 +36,6 @@ public class TicketController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Employee,SupportAgent,Admin")]
     public async Task<IActionResult> CreateTicket(CreateTicketDto createDto)
     {
         var username = User.Identity?.Name ?? "Anonymous";
@@ -49,7 +48,6 @@ public class TicketController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "SupportAgent,Admin")]
     public async Task<IActionResult> UpdateTicket(int id, UpdateTicketDto updateDto)
     {
         var username = User.Identity?.Name ?? "Anonymous";
@@ -58,7 +56,6 @@ public class TicketController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteTicket(int id)
     {
         await _ticketService.DeleteAsync(id);
@@ -66,7 +63,6 @@ public class TicketController : ControllerBase
     }
 
     [HttpPatch("{id}/status")]
-    [Authorize(Roles = "SupportAgent,Admin")]
     public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto statusDto)
     {
         var username = User.Identity?.Name ?? "Anonymous";
@@ -75,7 +71,6 @@ public class TicketController : ControllerBase
     }
 
     [HttpPatch("{id}/assign")]
-    [Authorize(Roles = "SupportAgent,Admin")]
     public async Task<IActionResult> Assign(int id, [FromBody] AssignTicketDto assignDto)
     {
         var username = User.Identity?.Name ?? "Anonymous";
@@ -85,7 +80,6 @@ public class TicketController : ControllerBase
 
     // Advanced Helpdesk Features Endpoints
     [HttpPost("{id}/comments")]
-    [Authorize(Roles = "Employee,SupportAgent,Admin")]
     public async Task<IActionResult> AddComment(int id, [FromBody] CreateCommentDto commentDto)
     {
         var username = User.Identity?.Name ?? "Anonymous";
@@ -94,7 +88,6 @@ public class TicketController : ControllerBase
     }
 
     [HttpGet("{id}/comments")]
-    [Authorize(Roles = "Employee,SupportAgent,Admin")]
     public async Task<IActionResult> GetComments(int id)
     {
         var comments = await _ticketService.GetCommentsAsync(id);
@@ -102,7 +95,6 @@ public class TicketController : ControllerBase
     }
 
     [HttpGet("{id}/history")]
-    [Authorize(Roles = "SupportAgent,Admin")]
     public async Task<IActionResult> GetHistory(int id)
     {
         var history = await _ticketService.GetHistoryAsync(id);

@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { api } from '../services/api';
+import { api } from '../services/api.js';
 import { ArrowLeft, Save } from 'lucide-react';
 
-export const UpdateTicket: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+export const UpdateTicket = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const ticketId = Number(id);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Hardware');
-  const [priority, setPriority] = useState<'Low' | 'Medium' | 'High' | 'Critical'>('Low');
-  const [status, setStatus] = useState<'Open' | 'InProgress' | 'Resolved' | 'Closed'>('Open');
+  const [priority, setPriority] = useState('Low');
+  const [status, setStatus] = useState('Open');
   
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -34,7 +34,7 @@ export const UpdateTicket: React.FC = () => {
       });
   }, [ticketId]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !description || !category) {
       setError('All fields are required.');
@@ -47,7 +47,7 @@ export const UpdateTicket: React.FC = () => {
     try {
       await api.updateTicket(ticketId, { title, description, category, priority, status });
       navigate(`/ticket/${ticketId}`);
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || 'Failed to update ticket.');
       setSubmitting(false);
     }
@@ -111,7 +111,7 @@ export const UpdateTicket: React.FC = () => {
             <select
               className="form-control"
               value={priority}
-              onChange={(e) => setPriority(e.target.value as any)}
+              onChange={(e) => setPriority(e.target.value)}
             >
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
@@ -125,7 +125,7 @@ export const UpdateTicket: React.FC = () => {
             <select
               className="form-control"
               value={status}
-              onChange={(e) => setStatus(e.target.value as any)}
+              onChange={(e) => setStatus(e.target.value)}
             >
               <option value="Open">Open</option>
               <option value="InProgress">In Progress</option>

@@ -1,41 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Dashboard } from './pages/Dashboard';
-import { TicketList } from './pages/TicketList';
-import { CreateTicket } from './pages/CreateTicket';
-import { TicketDetails } from './pages/TicketDetails';
-import { UpdateTicket } from './pages/UpdateTicket';
-import { getCurrentUser, setCurrentUser, getAuthToken } from './services/api';
-import { LayoutDashboard, ListTodo, PlusCircle, Terminal, Sun, Moon } from 'lucide-react';
+import { Dashboard } from './pages/Dashboard.jsx';
+import { TicketList } from './pages/TicketList.jsx';
+import { CreateTicket } from './pages/CreateTicket.jsx';
+import { TicketDetails } from './pages/TicketDetails.jsx';
+import { UpdateTicket } from './pages/UpdateTicket.jsx';
+import { getCurrentUser, getAuthToken } from './services/api.js';
+import { LayoutDashboard, ListTodo, PlusCircle, Terminal } from 'lucide-react';
 
-export const App: React.FC = () => {
+export const App = () => {
   const location = useLocation();
-  const [user, setUser] = useState(getCurrentUser());
-  const [tokenStatus, setTokenStatus] = useState<'loading' | 'success' | 'failed'>('loading');
-
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'light' || saved === 'dark') return saved;
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  });
+  const [user] = useState(getCurrentUser());
+  const [tokenStatus, setTokenStatus] = useState('loading');
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
-
-  const handleRoleChange = async (role: string) => {
-    let username = 'john_employee';
-    if (role === 'SupportAgent') username = 'agent_smith';
-    if (role === 'Admin') username = 'admin_boss';
-    
-    setCurrentUser(username, role);
-    setUser({ username, role });
-  };
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('theme', 'light');
+  }, []);
 
   useEffect(() => {
     setTokenStatus('loading');
@@ -74,14 +55,6 @@ export const App: React.FC = () => {
               <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Microservice</span>
             </div>
           </div>
-          
-          <button
-            onClick={toggleTheme}
-            className="theme-toggle-btn"
-            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
         </div>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
@@ -123,9 +96,9 @@ export const App: React.FC = () => {
           </Link>
         </nav>
 
-        {/* Identity & Role Selector */}
+        {/* Identity Info */}
         <div className="glass-card" style={{ marginTop: 'auto', padding: '16px', background: 'var(--card-item-bg)', borderColor: 'var(--card-item-border)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{
               width: '32px',
               height: '32px',
@@ -142,28 +115,19 @@ export const App: React.FC = () => {
             </div>
             <div>
               <div style={{ fontSize: '13px', fontWeight: 600 }}>{user.username}</div>
-              <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{user.role}</div>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <label style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '2px' }}>Simulation Role</label>
-            <div style={{ display: 'flex', gap: '4px' }}>
-              <button onClick={() => handleRoleChange('Employee')} className="btn btn-secondary" style={{ padding: '6px 8px', fontSize: '11px', flex: 1, background: user.role === 'Employee' ? 'var(--primary)' : 'var(--bg-tertiary)' }}>Emp</button>
-              <button onClick={() => handleRoleChange('SupportAgent')} className="btn btn-secondary" style={{ padding: '6px 8px', fontSize: '11px', flex: 1, background: user.role === 'SupportAgent' ? 'var(--primary)' : 'var(--bg-tertiary)' }}>Agent</button>
-              <button onClick={() => handleRoleChange('Admin')} className="btn btn-secondary" style={{ padding: '6px 8px', fontSize: '11px', flex: 1, background: user.role === 'Admin' ? 'var(--primary)' : 'var(--bg-tertiary)' }}>Admin</button>
+              <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Helpdesk Operator</div>
             </div>
           </div>
 
           {/* Token Status indicator */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', marginTop: '12px', color: 'var(--text-muted)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', marginTop: '16px', color: 'var(--text-muted)' }}>
             <div style={{
               width: '8px',
               height: '8px',
               borderRadius: '50%',
               background: tokenStatus === 'success' ? 'var(--success)' : tokenStatus === 'loading' ? 'var(--warning)' : 'var(--danger)'
             }} />
-            <span>JWT Status: {tokenStatus}</span>
+            <span>Session: {tokenStatus === 'success' ? 'Active' : tokenStatus}</span>
           </div>
         </div>
       </aside>

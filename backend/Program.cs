@@ -89,7 +89,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Apply migrations on startup if enabled (useful in docker environments)
+// Apply migrations on startup if enabled (useful in podman/container environments)
 if (app.Configuration.GetValue<bool>("ApplyMigrationsOnStartup"))
 {
     using (var scope = app.Services.CreateScope())

@@ -1,48 +1,17 @@
 const BASE_URL = 'http://localhost:5007/api';
 
-export interface Ticket {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  priority: 'Low' | 'Medium' | 'High' | 'Critical';
-  status: 'Open' | 'InProgress' | 'Resolved' | 'Closed';
-  createdBy: string;
-  assignedTo?: string;
-  createdAt: string;
-  updatedAt?: string;
-}
-
-export interface TicketComment {
-  id: number;
-  ticketId: number;
-  commentText: string;
-  createdBy: string;
-  createdAt: string;
-}
-
-export interface TicketHistory {
-  id: number;
-  ticketId: number;
-  fieldName: string;
-  oldValue: string;
-  newValue: string;
-  changedBy: string;
-  changedAt: string;
-}
-
 export const getCurrentUser = () => {
   const user = localStorage.getItem('helpdesk_user');
-  return user ? JSON.parse(user) : { username: 'john_doe', role: 'Employee' };
+  return user ? JSON.parse(user) : { username: 'john_doe', role: 'Operator' };
 };
 
-export const setCurrentUser = (username: string, role: string) => {
+export const setCurrentUser = (username, role) => {
   localStorage.setItem('helpdesk_user', JSON.stringify({ username, role }));
   // Force token refresh on user change
   localStorage.removeItem('helpdesk_token');
 };
 
-export const getAuthToken = async (): Promise<string | null> => {
+export const getAuthToken = async () => {
   const cached = localStorage.getItem('helpdesk_token');
   const user = getCurrentUser();
   
@@ -79,7 +48,7 @@ export const getAuthToken = async (): Promise<string | null> => {
 
 const getHeaders = async () => {
   const token = await getAuthToken();
-  const headers: Record<string, string> = {
+  const headers = {
     'Content-Type': 'application/json',
   };
   if (token) {
@@ -89,7 +58,7 @@ const getHeaders = async () => {
 };
 
 export const api = {
-  getTickets: async (filters?: { status?: string; priority?: string; assignedTo?: string }): Promise<Ticket[]> => {
+  getTickets: async (filters) => {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
     if (filters?.priority) params.append('priority', filters.priority);
@@ -101,14 +70,14 @@ export const api = {
     return res.json();
   },
 
-  getTicket: async (id: number): Promise<Ticket> => {
+  getTicket: async (id) => {
     const headers = await getHeaders();
     const res = await fetch(`${BASE_URL}/ticket/${id}`, { headers });
     if (!res.ok) throw new Error(await res.text() || 'Failed to fetch ticket');
     return res.json();
   },
 
-  createTicket: async (ticket: Omit<Ticket, 'id' | 'status' | 'createdBy' | 'createdAt' | 'updatedAt'>): Promise<Ticket> => {
+  createTicket: async (ticket) => {
     const headers = await getHeaders();
     const res = await fetch(`${BASE_URL}/ticket`, {
       method: 'POST',
@@ -119,7 +88,7 @@ export const api = {
     return res.json();
   },
 
-  updateTicket: async (id: number, ticket: Pick<Ticket, 'title' | 'description' | 'category' | 'priority' | 'status'>): Promise<Ticket> => {
+  updateTicket: async (id, ticket) => {
     const headers = await getHeaders();
     const res = await fetch(`${BASE_URL}/ticket/${id}`, {
       method: 'PUT',
@@ -130,7 +99,7 @@ export const api = {
     return res.json();
   },
 
-  deleteTicket: async (id: number): Promise<void> => {
+  deleteTicket: async (id) => {
     const headers = await getHeaders();
     const res = await fetch(`${BASE_URL}/ticket/${id}`, {
       method: 'DELETE',
@@ -139,7 +108,7 @@ export const api = {
     if (!res.ok) throw new Error(await res.text() || 'Failed to delete ticket');
   },
 
-  updateStatus: async (id: number, status: string): Promise<Ticket> => {
+  updateStatus: async (id, status) => {
     const headers = await getHeaders();
     const res = await fetch(`${BASE_URL}/ticket/${id}/status`, {
       method: 'PATCH',
@@ -150,7 +119,7 @@ export const api = {
     return res.json();
   },
 
-  assignTicket: async (id: number, assignedTo: string | null): Promise<Ticket> => {
+  assignTicket: async (id, assignedTo) => {
     const headers = await getHeaders();
     const res = await fetch(`${BASE_URL}/ticket/${id}/assign`, {
       method: 'PATCH',
@@ -161,7 +130,7 @@ export const api = {
     return res.json();
   },
 
-  addComment: async (ticketId: number, commentText: string): Promise<TicketComment> => {
+  addComment: async (ticketId, commentText) => {
     const headers = await getHeaders();
     const res = await fetch(`${BASE_URL}/ticket/${ticketId}/comments`, {
       method: 'POST',
@@ -172,14 +141,14 @@ export const api = {
     return res.json();
   },
 
-  getComments: async (ticketId: number): Promise<TicketComment[]> => {
+  getComments: async (ticketId) => {
     const headers = await getHeaders();
     const res = await fetch(`${BASE_URL}/ticket/${ticketId}/comments`, { headers });
     if (!res.ok) throw new Error(await res.text() || 'Failed to fetch comments');
     return res.json();
   },
 
-  getHistory: async (ticketId: number): Promise<TicketHistory[]> => {
+  getHistory: async (ticketId) => {
     const headers = await getHeaders();
     const res = await fetch(`${BASE_URL}/ticket/${ticketId}/history`, { headers });
     if (!res.ok) throw new Error(await res.text() || 'Failed to fetch history');

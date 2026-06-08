@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { api, type Ticket, type TicketComment, type TicketHistory, getCurrentUser } from '../services/api';
+import { api, getCurrentUser } from '../services/api.js';
 import { ArrowLeft, MessageSquare, History, UserCheck, CheckCircle, AlertTriangle, Send } from 'lucide-react';
 
-export const TicketDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+export const TicketDetails = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const ticketId = Number(id);
 
-  const [ticket, setTicket] = useState<Ticket | null>(null);
-  const [comments, setComments] = useState<TicketComment[]>([]);
-  const [history, setHistory] = useState<TicketHistory[]>([]);
+  const [ticket, setTicket] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
@@ -30,13 +30,11 @@ export const TicketDetails: React.FC = () => {
       const commentsData = await api.getComments(ticketId);
       setComments(commentsData);
 
-      if (currentUser.role === 'SupportAgent' || currentUser.role === 'Admin') {
-        const historyData = await api.getHistory(ticketId);
-        setHistory(historyData);
-      }
+      const historyData = await api.getHistory(ticketId);
+      setHistory(historyData);
 
       setLoading(false);
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || 'Failed to load ticket details.');
       setLoading(false);
     }
@@ -44,9 +42,10 @@ export const TicketDetails: React.FC = () => {
 
   useEffect(() => {
     loadAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId, currentUser.role, currentUser.username]);
 
-  const handleAddComment = async (e: React.FormEvent) => {
+  const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
 
@@ -58,18 +57,16 @@ export const TicketDetails: React.FC = () => {
       setComments([added, ...comments]);
       setNewComment('');
       
-      if (currentUser.role === 'SupportAgent' || currentUser.role === 'Admin') {
-        const historyData = await api.getHistory(ticketId);
-        setHistory(historyData);
-      }
-    } catch (err: any) {
+      const historyData = await api.getHistory(ticketId);
+      setHistory(historyData);
+    } catch (err) {
       setActionError(err.message || 'Failed to add comment.');
     } finally {
       setCommentSubmitting(false);
     }
   };
 
-  const handleUpdateStatus = async (status: string) => {
+  const handleUpdateStatus = async (status) => {
     setActionError('');
     try {
       const updated = await api.updateStatus(ticketId, status);
@@ -77,7 +74,7 @@ export const TicketDetails: React.FC = () => {
       
       const historyData = await api.getHistory(ticketId);
       setHistory(historyData);
-    } catch (err: any) {
+    } catch (err) {
       setActionError(err.message || 'Failed to update status.');
     }
   };
@@ -91,7 +88,7 @@ export const TicketDetails: React.FC = () => {
       
       const historyData = await api.getHistory(ticketId);
       setHistory(historyData);
-    } catch (err: any) {
+    } catch (err) {
       setActionError(err.message || 'Failed to assign ticket.');
     }
   };
@@ -106,11 +103,9 @@ export const TicketDetails: React.FC = () => {
         <button onClick={() => navigate('/tickets')} className="btn btn-secondary">
           <ArrowLeft size={16} /> Back to List
         </button>
-        {(currentUser.role === 'Admin' || currentUser.role === 'SupportAgent') && (
-          <Link to={`/update/${ticket.id}`} className="btn btn-secondary" style={{ borderColor: 'var(--border-glow)' }}>
-            Edit Ticket Properties
-          </Link>
-        )}
+        <Link to={`/update/${ticket.id}`} className="btn btn-secondary" style={{ borderColor: 'var(--border-glow)' }}>
+          Edit Ticket Properties
+        </Link>
       </div>
 
       {actionError && (
@@ -239,103 +234,97 @@ export const TicketDetails: React.FC = () => {
         {/* Sidebar Controls */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
           
-          {(currentUser.role === 'Admin' || currentUser.role === 'SupportAgent') && (
-            <div className="glass-card">
-              <h2 style={{ fontSize: '18px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle size={18} style={{ color: 'var(--primary)' }} /> Update Status
-              </h2>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <button
-                  onClick={() => handleUpdateStatus('Open')}
-                  className={`btn ${ticket.status === 'Open' ? 'btn-primary' : 'btn-secondary'}`}
-                  disabled={ticket.status === 'Open'}
-                  style={{ justifyContent: 'flex-start' }}
-                >
-                  Open
-                </button>
-                <button
-                  onClick={() => handleUpdateStatus('InProgress')}
-                  className={`btn ${ticket.status === 'InProgress' ? 'btn-primary' : 'btn-secondary'}`}
-                  disabled={ticket.status === 'InProgress' || (ticket.status !== 'Open' && ticket.status !== 'Resolved')}
-                  style={{ justifyContent: 'flex-start' }}
-                >
-                  In Progress
-                </button>
-                <button
-                  onClick={() => handleUpdateStatus('Resolved')}
-                  className={`btn ${ticket.status === 'Resolved' ? 'btn-primary' : 'btn-secondary'}`}
-                  disabled={ticket.status === 'Resolved' || ticket.status !== 'InProgress'}
-                  style={{ justifyContent: 'flex-start' }}
-                >
-                  Resolved
-                </button>
-                <button
-                  onClick={() => handleUpdateStatus('Closed')}
-                  className={`btn ${ticket.status === 'Closed' ? 'btn-primary' : 'btn-secondary'}`}
-                  disabled={ticket.status === 'Closed' || ticket.status === 'Open'}
-                  style={{ justifyContent: 'flex-start' }}
-                >
-                  Closed
-                </button>
-              </div>
-            </div>
-          )}
-
-          {(currentUser.role === 'Admin' || currentUser.role === 'SupportAgent') && (
-            <div className="glass-card">
-              <h2 style={{ fontSize: '18px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <UserCheck size={18} style={{ color: 'var(--primary)' }} /> Assignment
-              </h2>
-
-              <div className="form-group">
-                <label className="form-label">Assignee Username</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="e.g. agent_smith"
-                  value={newAssignee}
-                  onChange={(e) => setNewAssignee(e.target.value)}
-                />
-              </div>
-              <button onClick={handleAssign} className="btn btn-primary" style={{ width: '100%' }}>
-                Apply Assignment
+          <div className="glass-card">
+            <h2 style={{ fontSize: '18px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle size={18} style={{ color: 'var(--primary)' }} /> Update Status
+            </h2>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button
+                onClick={() => handleUpdateStatus('Open')}
+                className={`btn ${ticket.status === 'Open' ? 'btn-primary' : 'btn-secondary'}`}
+                disabled={ticket.status === 'Open'}
+                style={{ justifyContent: 'flex-start' }}
+              >
+                Open
+              </button>
+              <button
+                onClick={() => handleUpdateStatus('InProgress')}
+                className={`btn ${ticket.status === 'InProgress' ? 'btn-primary' : 'btn-secondary'}`}
+                disabled={ticket.status === 'InProgress' || (ticket.status !== 'Open' && ticket.status !== 'Resolved')}
+                style={{ justifyContent: 'flex-start' }}
+              >
+                In Progress
+              </button>
+              <button
+                onClick={() => handleUpdateStatus('Resolved')}
+                className={`btn ${ticket.status === 'Resolved' ? 'btn-primary' : 'btn-secondary'}`}
+                disabled={ticket.status === 'Resolved' || ticket.status !== 'InProgress'}
+                style={{ justifyContent: 'flex-start' }}
+              >
+                Resolved
+              </button>
+              <button
+                onClick={() => handleUpdateStatus('Closed')}
+                className={`btn ${ticket.status === 'Closed' ? 'btn-primary' : 'btn-secondary'}`}
+                disabled={ticket.status === 'Closed' || ticket.status === 'Open'}
+                style={{ justifyContent: 'flex-start' }}
+              >
+                Closed
               </button>
             </div>
-          )}
+          </div>
 
-          {(currentUser.role === 'Admin' || currentUser.role === 'SupportAgent') && (
-            <div className="glass-card">
-              <h2 style={{ fontSize: '18px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <History size={18} style={{ color: 'var(--primary)' }} /> Audit Log
-              </h2>
-              
-              {history.length === 0 ? (
-                <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No audit history recorded.</p>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '300px', overflowY: 'auto', paddingRight: '4px' }}>
-                  {history.map(h => (
-                    <div key={h.id} style={{
-                      fontSize: '12px',
-                      borderBottom: '1px solid var(--border-light)',
-                      paddingBottom: '10px'
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                        <strong>{h.changedBy}</strong>
-                        <span>{new Date(h.changedAt).toLocaleTimeString()}</span>
-                      </div>
-                      <div style={{ color: 'var(--text-primary)' }}>
-                        Field: <strong style={{ color: 'var(--primary)' }}>{h.fieldName}</strong>
-                      </div>
-                      <div style={{ color: 'var(--text-secondary)', marginTop: '2px' }}>
-                        {h.oldValue ? `"${h.oldValue}" → "${h.newValue}"` : `Set to "${h.newValue}"`}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+          <div className="glass-card">
+            <h2 style={{ fontSize: '18px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <UserCheck size={18} style={{ color: 'var(--primary)' }} /> Assignment
+            </h2>
+
+            <div className="form-group">
+              <label className="form-label">Assignee Username</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="e.g. agent_smith"
+                value={newAssignee}
+                onChange={(e) => setNewAssignee(e.target.value)}
+              />
             </div>
-          )}
+            <button onClick={handleAssign} className="btn btn-primary" style={{ width: '100%' }}>
+              Apply Assignment
+            </button>
+          </div>
+
+          <div className="glass-card">
+            <h2 style={{ fontSize: '18px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <History size={18} style={{ color: 'var(--primary)' }} /> Audit Log
+            </h2>
+            
+            {history.length === 0 ? (
+              <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No audit history recorded.</p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '300px', overflowY: 'auto', paddingRight: '4px' }}>
+                {history.map(h => (
+                  <div key={h.id} style={{
+                    fontSize: '12px',
+                    borderBottom: '1px solid var(--border-light)',
+                    paddingBottom: '10px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '4px' }}>
+                      <strong>{h.changedBy}</strong>
+                      <span>{new Date(h.changedAt).toLocaleTimeString()}</span>
+                    </div>
+                    <div style={{ color: 'var(--text-primary)' }}>
+                      Field: <strong style={{ color: 'var(--primary)' }}>{h.fieldName}</strong>
+                    </div>
+                    <div style={{ color: 'var(--text-secondary)', marginTop: '2px' }}>
+                      {h.oldValue ? `"${h.oldValue}" → "${h.newValue}"` : `Set to "${h.newValue}"`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
