@@ -41,6 +41,111 @@
   
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Semantic UI Backgrounds that adapt */
+  --card-item-bg: rgba(255, 255, 255, 0.02);
+  --card-item-bg-hover: rgba(255, 255, 255, 0.04);
+  --card-item-border: var(--border-light);
+  --table-header-bg: rgba(255, 255, 255, 0.02);
+  --badge-priority-bg: rgba(255, 255, 255, 0.04);
+  --category-progress-bg: rgba(255, 255, 255, 0.05);
+  --description-bg: rgba(255, 255, 255, 0.01);
+
+  /* Adaptive Status variables */
+  --status-open: #818cf8;
+  --status-open-bg: rgba(99, 102, 241, 0.15);
+  --status-open-border: rgba(99, 102, 241, 0.3);
+  
+  --status-inprogress: #22d3ee;
+  --status-inprogress-bg: rgba(6, 182, 212, 0.15);
+  --status-inprogress-border: rgba(6, 182, 212, 0.3);
+
+  --status-resolved: #34d399;
+  --status-resolved-bg: rgba(16, 185, 129, 0.15);
+  --status-resolved-border: rgba(16, 185, 129, 0.3);
+
+  --status-closed: #94a3b8;
+  --status-closed-bg: rgba(100, 116, 139, 0.15);
+  --status-closed-border: rgba(100, 116, 139, 0.3);
+
+  /* Adaptive Priority variables */
+  --priority-low: #34d399;
+  --priority-low-bg: rgba(16, 185, 129, 0.1);
+  --priority-medium: #fbbf24;
+  --priority-medium-bg: rgba(245, 158, 11, 0.1);
+  --priority-high: #f87171;
+  --priority-high-bg: rgba(239, 68, 68, 0.1);
+  --priority-critical: #f87171;
+  --priority-critical-bg: rgba(239, 68, 68, 0.25);
+  --priority-critical-border: rgba(239, 68, 68, 0.5);
+}
+
+[data-theme='light'] {
+  /* Color Palette - Premium Light theme */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  
+  --primary: #4f46e5; /* Indigo */
+  --primary-hover: #3730a3;
+  --primary-glow: rgba(79, 70, 229, 0.15);
+  
+  --success: #059669;
+  --success-glow: rgba(5, 150, 105, 0.15);
+  --warning: #d97706;
+  --warning-glow: rgba(217, 119, 6, 0.15);
+  --danger: #dc2626;
+  --danger-glow: rgba(220, 38, 38, 0.15);
+  --info: #0891b2;
+  --info-glow: rgba(8, 145, 178, 0.15);
+
+  --border-light: rgba(15, 23, 42, 0.08);
+  --border-glow: rgba(79, 70, 229, 0.1);
+  
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(15, 23, 42, 0.06);
+  --glass-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04);
+
+  /* Semantic UI Backgrounds that adapt */
+  --card-item-bg: rgba(15, 23, 42, 0.015);
+  --card-item-bg-hover: rgba(15, 23, 42, 0.03);
+  --card-item-border: rgba(15, 23, 42, 0.06);
+  --table-header-bg: rgba(15, 23, 42, 0.02);
+  --badge-priority-bg: rgba(15, 23, 42, 0.04);
+  --category-progress-bg: rgba(15, 23, 42, 0.05);
+  --description-bg: rgba(15, 23, 42, 0.01);
+
+  /* Adaptive Status variables */
+  --status-open: #4f46e5;
+  --status-open-bg: rgba(79, 70, 229, 0.1);
+  --status-open-border: rgba(79, 70, 229, 0.2);
+
+  --status-inprogress: #0891b2;
+  --status-inprogress-bg: rgba(8, 145, 178, 0.1);
+  --status-inprogress-border: rgba(8, 145, 178, 0.2);
+
+  --status-resolved: #059669;
+  --status-resolved-bg: rgba(5, 150, 105, 0.1);
+  --status-resolved-border: rgba(5, 150, 105, 0.2);
+
+  --status-closed: #475569;
+  --status-closed-bg: rgba(71, 85, 105, 0.1);
+  --status-closed-border: rgba(71, 85, 105, 0.2);
+
+  /* Adaptive Priority variables */
+  --priority-low: #059669;
+  --priority-low-bg: rgba(5, 150, 105, 0.1);
+  --priority-medium: #d97706;
+  --priority-medium-bg: rgba(217, 119, 6, 0.1);
+  --priority-high: #dc2626;
+  --priority-high-bg: rgba(220, 38, 38, 0.1);
+  --priority-critical: #dc2626;
+  --priority-critical-bg: rgba(220, 38, 38, 0.25);
+  --priority-critical-border: rgba(220, 38, 38, 0.5);
 }
 
 * {
@@ -160,7 +265,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--card-item-bg-hover);
   border-color: var(--text-muted);
 }
 
@@ -220,45 +325,45 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .badge-open {
-  background: rgba(99, 102, 241, 0.15);
-  color: #818cf8;
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: var(--status-open-bg);
+  color: var(--status-open);
+  border: 1px solid var(--status-open-border);
 }
 
 .badge-inprogress {
-  background: rgba(6, 182, 212, 0.15);
-  color: #22d3ee;
-  border: 1px solid rgba(6, 182, 212, 0.3);
+  background: var(--status-inprogress-bg);
+  color: var(--status-inprogress);
+  border: 1px solid var(--status-inprogress-border);
 }
 
 .badge-resolved {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: var(--status-resolved-bg);
+  color: var(--status-resolved);
+  border: 1px solid var(--status-resolved-border);
 }
 
 .badge-closed {
-  background: rgba(100, 116, 139, 0.15);
-  color: #94a3b8;
-  border: 1px solid rgba(100, 116, 139, 0.3);
+  background: var(--status-closed-bg);
+  color: var(--status-closed);
+  border: 1px solid var(--status-closed-border);
 }
 
 .badge-low {
-  background: rgba(16, 185, 129, 0.1);
-  color: #34d399;
+  background: var(--priority-low-bg);
+  color: var(--priority-low);
 }
 .badge-medium {
-  background: rgba(245, 158, 11, 0.1);
-  color: #fbbf24;
+  background: var(--priority-medium-bg);
+  color: var(--priority-medium);
 }
 .badge-high {
-  background: rgba(239, 68, 68, 0.1);
-  color: #f87171;
+  background: var(--priority-high-bg);
+  color: var(--priority-high);
 }
 .badge-critical {
-  background: rgba(239, 68, 68, 0.25);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.5);
+  background: var(--priority-critical-bg);
+  color: var(--priority-critical);
+  border: 1px solid var(--priority-critical-border);
   animation: pulse 2s infinite;
 }
 
@@ -266,6 +371,27 @@ h1, h2, h3, h4, h5, h6 {
   0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
   70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
   100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* Theme toggle button styling */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--card-item-bg-hover);
+  border-color: var(--text-muted);
+  color: var(--text-primary);
 }
 
 /* Animations */

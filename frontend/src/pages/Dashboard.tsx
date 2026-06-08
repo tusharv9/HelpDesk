@@ -58,7 +58,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ padding: '12px', borderRadius: '12px', background: 'rgba(129, 140, 248, 0.1)', color: '#818cf8' }}>
+          <div style={{ padding: '12px', borderRadius: '12px', background: 'var(--status-open-bg)', color: 'var(--status-open)' }}>
             <Inbox size={28} />
           </div>
           <div>
@@ -68,7 +68,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ padding: '12px', borderRadius: '12px', background: 'rgba(6, 182, 212, 0.1)', color: '#22d3ee' }}>
+          <div style={{ padding: '12px', borderRadius: '12px', background: 'var(--status-inprogress-bg)', color: 'var(--status-inprogress)' }}>
             <Clock size={28} />
           </div>
           <div>
@@ -78,7 +78,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ padding: '12px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.1)', color: '#34d399' }}>
+          <div style={{ padding: '12px', borderRadius: '12px', background: 'var(--status-resolved-bg)', color: 'var(--status-resolved)' }}>
             <CheckCircle size={28} />
           </div>
           <div>
@@ -113,8 +113,8 @@ export const Dashboard: React.FC = () => {
                   justifyContent: 'space-between',
                   padding: '16px',
                   borderRadius: '8px',
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid var(--border-light)'
+                  background: 'var(--card-item-bg)',
+                  border: '1px solid var(--card-item-border)'
                 }}>
                   <div>
                     <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>{t.title}</div>
@@ -124,7 +124,7 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <span className={`badge badge-${t.status.toLowerCase()}`}>{t.status}</span>
-                    <span className={`badge badge-${t.priority.toLowerCase()}`} style={{ background: 'rgba(255,255,255,0.05)' }}>{t.priority}</span>
+                    <span className={`badge badge-${t.priority.toLowerCase()}`} style={{ background: 'var(--badge-priority-bg)' }}>{t.priority}</span>
                   </div>
                 </div>
               ))}
@@ -147,7 +147,7 @@ export const Dashboard: React.FC = () => {
                       <span style={{ fontWeight: 500 }}>{cat}</span>
                       <span style={{ color: 'var(--text-secondary)' }}>{count} ({Math.round(percentage)}%)</span>
                     </div>
-                    <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', height: '6px', background: 'var(--category-progress-bg)', borderRadius: '3px', overflow: 'hidden' }}>
                       <div style={{ width: `${percentage}%`, height: '100%', background: 'var(--primary)', borderRadius: '3px' }} />
                     </div>
                   </div>

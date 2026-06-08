@@ -6,12 +6,27 @@ import { CreateTicket } from './pages/CreateTicket';
 import { TicketDetails } from './pages/TicketDetails';
 import { UpdateTicket } from './pages/UpdateTicket';
 import { getCurrentUser, setCurrentUser, getAuthToken } from './services/api';
-import { LayoutDashboard, ListTodo, PlusCircle, Terminal } from 'lucide-react';
+import { LayoutDashboard, ListTodo, PlusCircle, Terminal, Sun, Moon } from 'lucide-react';
 
 export const App: React.FC = () => {
   const location = useLocation();
   const [user, setUser] = useState(getCurrentUser());
   const [tokenStatus, setTokenStatus] = useState<'loading' | 'success' | 'failed'>('loading');
+
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') return saved;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   const handleRoleChange = async (role: string) => {
     let username = 'john_employee';
@@ -39,24 +54,34 @@ export const App: React.FC = () => {
     <div className="app-container">
       {/* Sidebar Navigation */}
       <aside className="sidebar">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px' }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '10px',
-            background: 'linear-gradient(135deg, var(--primary), var(--info))',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            boxShadow: '0 4px 12px var(--primary-glow)'
-          }}>
-            <Terminal size={20} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px', width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, var(--primary), var(--info))',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              boxShadow: '0 4px 12px var(--primary-glow)'
+            }}>
+              <Terminal size={20} />
+            </div>
+            <div>
+              <h2 style={{ fontSize: '18px', fontWeight: 800, fontFamily: 'var(--font-display)', letterSpacing: '-0.02em' }}>Helpdesk</h2>
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Microservice</span>
+            </div>
           </div>
-          <div>
-            <h2 style={{ fontSize: '18px', fontWeight: 800, fontFamily: 'var(--font-display)', letterSpacing: '-0.02em' }}>Helpdesk</h2>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Microservice</span>
-          </div>
+          
+          <button
+            onClick={toggleTheme}
+            className="theme-toggle-btn"
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
         </div>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
@@ -99,7 +124,7 @@ export const App: React.FC = () => {
         </nav>
 
         {/* Identity & Role Selector */}
-        <div className="glass-card" style={{ marginTop: 'auto', padding: '16px', background: 'rgba(255,255,255,0.01)' }}>
+        <div className="glass-card" style={{ marginTop: 'auto', padding: '16px', background: 'var(--card-item-bg)', borderColor: 'var(--card-item-border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
             <div style={{
               width: '32px',

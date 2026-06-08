@@ -141,7 +141,7 @@ export const TicketDetails: React.FC = () => {
               <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)' }}>TICKET #{ticket.id}</span>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <span className={`badge badge-${ticket.status.toLowerCase()}`}>{ticket.status}</span>
-                <span className={`badge badge-${ticket.priority.toLowerCase()}`} style={{ background: 'rgba(255,255,255,0.04)' }}>{ticket.priority}</span>
+                <span className={`badge badge-${ticket.priority.toLowerCase()}`} style={{ background: 'var(--badge-priority-bg)' }}>{ticket.priority}</span>
               </div>
             </div>
             
@@ -169,9 +169,9 @@ export const TicketDetails: React.FC = () => {
             <p style={{
               fontSize: '15px',
               lineHeight: 1.6,
-              color: '#d1d5db',
+              color: 'var(--text-primary)',
               whiteSpace: 'pre-line',
-              background: 'rgba(255,255,255,0.01)',
+              background: 'var(--description-bg)',
               padding: '16px',
               borderRadius: '8px',
               border: '1px solid var(--border-light)'
@@ -227,7 +227,7 @@ export const TicketDetails: React.FC = () => {
                         <span style={{ fontWeight: 600, fontSize: '14px' }}>{c.createdBy}</span>
                         <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{new Date(c.createdAt).toLocaleString()}</span>
                       </div>
-                      <p style={{ color: '#d1d5db', fontSize: '14px', lineHeight: 1.5 }}>{c.commentText}</p>
+                      <p style={{ color: 'var(--text-primary)', fontSize: '14px', lineHeight: 1.5 }}>{c.commentText}</p>
                     </div>
                   </div>
                 ))}

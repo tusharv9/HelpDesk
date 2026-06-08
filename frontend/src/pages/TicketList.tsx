@@ -132,7 +132,7 @@ export const TicketList: React.FC = () => {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
-                <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid var(--border-light)' }}>
+                <tr style={{ background: 'var(--table-header-bg)', borderBottom: '1px solid var(--border-light)' }}>
                   <th style={{ padding: '16px 24px', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '13px' }}>ID</th>
                   <th style={{ padding: '16px 24px', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '13px' }}>Ticket Details</th>
                   <th style={{ padding: '16px 24px', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '13px' }}>Status</th>
@@ -154,7 +154,7 @@ export const TicketList: React.FC = () => {
                       <span className={`badge badge-${t.status.toLowerCase()}`}>{t.status}</span>
                     </td>
                     <td style={{ padding: '16px 24px' }}>
-                      <span className={`badge badge-${t.priority.toLowerCase()}`} style={{ background: 'rgba(255,255,255,0.04)' }}>{t.priority}</span>
+                      <span className={`badge badge-${t.priority.toLowerCase()}`} style={{ background: 'var(--badge-priority-bg)' }}>{t.priority}</span>
                     </td>
                     <td style={{ padding: '16px 24px', color: t.assignedTo ? 'var(--text-primary)' : 'var(--text-muted)' }}>
                       {t.assignedTo || 'Unassigned'}
