@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { Dashboard } from './pages/Dashboard.jsx';
 import { TicketList } from './pages/TicketList.jsx';
 import { CreateTicket } from './pages/CreateTicket.jsx';
@@ -58,8 +58,8 @@ export const App = () => {
         </div>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-          <Link
-            to="/"
+          <NavLink
+            to=""
             className="btn"
             style={{
               justifyContent: 'flex-start',
@@ -69,9 +69,9 @@ export const App = () => {
             }}
           >
             <LayoutDashboard size={18} /> Command Center
-          </Link>
-          <Link
-            to="/tickets"
+          </NavLink>
+          <NavLink
+            to="tickets"
             className="btn"
             style={{
               justifyContent: 'flex-start',
@@ -81,9 +81,9 @@ export const App = () => {
             }}
           >
             <ListTodo size={18} /> Support Tickets
-          </Link>
-          <Link
-            to="/create"
+          </NavLink>
+          <NavLink
+            to="create"
             className="btn"
             style={{
               justifyContent: 'flex-start',
@@ -93,7 +93,7 @@ export const App = () => {
             }}
           >
             <PlusCircle size={18} /> File Ticket
-          </Link>
+          </NavLink>
         </nav>
 
         {/* Identity Info */}
@@ -135,11 +135,11 @@ export const App = () => {
       {/* Main Content Pane */}
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/tickets" element={<TicketList />} />
-          <Route path="/create" element={<CreateTicket />} />
-          <Route path="/ticket/:id" element={<TicketDetails />} />
-          <Route path="/update/:id" element={<UpdateTicket />} />
+          <Route index element={<Dashboard />} />
+          <Route path="tickets" element={<TicketList />} />
+          <Route path="create" element={<CreateTicket />} />
+          <Route path="ticket/:id" element={<TicketDetails />} />
+          <Route path="update/:id" element={<UpdateTicket />} />
         </Routes>
       </main>
     </div>
