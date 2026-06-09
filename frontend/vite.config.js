@@ -10,9 +10,7 @@ export default defineConfig({
       name: 'helpdesk',
       filename: 'remoteEntry.js',
       exposes: {
-        './HelpdeskApp': './src/App.jsx',
-        './Dashboard': './src/pages/Dashboard.jsx',
-        './TicketList': './src/pages/TicketList.jsx'
+        './HelpdeskApp': './src/App.jsx'
       },
       shared: ['react', 'react-dom', 'react-router-dom']
     })
