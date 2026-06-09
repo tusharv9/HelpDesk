@@ -24,7 +24,7 @@ export const CreateTicket = () => {
     
     try {
       await api.createTicket({ title, description, category, priority });
-      navigate('/tickets');
+      navigate('../tickets');
     } catch (err) {
       setError(err.message || 'Failed to create ticket. Verify authorization.');
       setSubmitting(false);
@@ -33,7 +33,7 @@ export const CreateTicket = () => {
 
   return (
     <div className="fade-in" style={{ maxWidth: '600px', margin: '0 auto' }}>
-      <button onClick={() => navigate('/tickets')} className="btn btn-secondary" style={{ marginBottom: '24px' }}>
+      <button onClick={() => navigate('../tickets')} className="btn btn-secondary" style={{ marginBottom: '24px' }}>
         <ArrowLeft size={16} /> Back to Tickets
       </button>
 

@@ -31,6 +31,10 @@ export const App = () => {
       .catch(() => setTokenStatus('failed'));
   }, [user]);
 
+  const isDashboardActive = location.pathname === '/' || location.pathname === '/helpdesk' || location.pathname === '/helpdesk/';
+  const isTicketsActive = location.pathname.endsWith('/tickets') || location.pathname.includes('/ticket/') || location.pathname.includes('/update/');
+  const isCreateActive = location.pathname.endsWith('/create');
+
   return (
     <div className="app-container">
       {/* Sidebar Navigation */}
@@ -63,9 +67,9 @@ export const App = () => {
             className="btn"
             style={{
               justifyContent: 'flex-start',
-              background: location.pathname === '/' ? 'rgba(99, 102, 241, 0.08)' : 'transparent',
-              color: location.pathname === '/' ? 'var(--text-primary)' : 'var(--text-secondary)',
-              border: location.pathname === '/' ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent',
+              background: isDashboardActive ? 'rgba(99, 102, 241, 0.08)' : 'transparent',
+              color: isDashboardActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+              border: isDashboardActive ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent',
             }}
           >
             <LayoutDashboard size={18} /> Command Center
@@ -75,9 +79,9 @@ export const App = () => {
             className="btn"
             style={{
               justifyContent: 'flex-start',
-              background: location.pathname.startsWith('/tickets') || location.pathname.startsWith('/ticket/') ? 'rgba(99, 102, 241, 0.08)' : 'transparent',
-              color: location.pathname.startsWith('/tickets') || location.pathname.startsWith('/ticket/') ? 'var(--text-primary)' : 'var(--text-secondary)',
-              border: location.pathname.startsWith('/tickets') || location.pathname.startsWith('/ticket/') ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent',
+              background: isTicketsActive ? 'rgba(99, 102, 241, 0.08)' : 'transparent',
+              color: isTicketsActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+              border: isTicketsActive ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent',
             }}
           >
             <ListTodo size={18} /> Support Tickets
@@ -87,9 +91,9 @@ export const App = () => {
             className="btn"
             style={{
               justifyContent: 'flex-start',
-              background: location.pathname === '/create' ? 'rgba(99, 102, 241, 0.08)' : 'transparent',
-              color: location.pathname === '/create' ? 'var(--text-primary)' : 'var(--text-secondary)',
-              border: location.pathname === '/create' ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent',
+              background: isCreateActive ? 'rgba(99, 102, 241, 0.08)' : 'transparent',
+              color: isCreateActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+              border: isCreateActive ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent',
             }}
           >
             <PlusCircle size={18} /> File Ticket
@@ -145,3 +149,5 @@ export const App = () => {
     </div>
   );
 };
+
+export default App;

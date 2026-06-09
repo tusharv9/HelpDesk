@@ -100,10 +100,10 @@ export const TicketDetails = () => {
   return (
     <div className="fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <button onClick={() => navigate('/tickets')} className="btn btn-secondary">
+        <button onClick={() => navigate('../tickets')} className="btn btn-secondary">
           <ArrowLeft size={16} /> Back to List
         </button>
-        <Link to={`/update/${ticket.id}`} className="btn btn-secondary" style={{ borderColor: 'var(--border-glow)' }}>
+        <Link to={`../update/${ticket.id}`} className="btn btn-secondary" style={{ borderColor: 'var(--border-glow)' }}>
           Edit Ticket Properties
         </Link>
       </div>

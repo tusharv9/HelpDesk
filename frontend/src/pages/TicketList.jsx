@@ -58,7 +58,7 @@ export const TicketList = () => {
           <h1 style={{ fontSize: '32px', marginBottom: '8px' }}>Support Tickets</h1>
           <p style={{ color: 'var(--text-secondary)' }}>Manage, filter, and audit helpdesk requests.</p>
         </div>
-        <Link to="/create" className="btn btn-primary">
+        <Link to="../create" className="btn btn-primary">
           <Plus size={18} /> Create Ticket
         </Link>
       </div>
@@ -161,11 +161,11 @@ export const TicketList = () => {
                     <td style={{ padding: '16px 24px', color: 'var(--text-secondary)', fontSize: '14px' }}>{t.createdBy}</td>
                     <td style={{ padding: '16px 24px', textAlign: 'right' }}>
                       <div style={{ display: 'inline-flex', gap: '8px' }}>
-                        <Link to={`/ticket/${t.id}`} className="btn btn-secondary" style={{ padding: '8px 12px' }} title="View details">
+                        <Link to={`../ticket/${t.id}`} className="btn btn-secondary" style={{ padding: '8px 12px' }} title="View details">
                           <Eye size={16} />
                         </Link>
                         
-                        <Link to={`/update/${t.id}`} className="btn btn-secondary" style={{ padding: '8px 12px', borderColor: 'var(--border-glow)' }} title="Edit ticket">
+                        <Link to={`../update/${t.id}`} className="btn btn-secondary" style={{ padding: '8px 12px', borderColor: 'var(--border-glow)' }} title="Edit ticket">
                           <Edit2 size={16} style={{ color: 'var(--primary)' }} />
                         </Link>
 

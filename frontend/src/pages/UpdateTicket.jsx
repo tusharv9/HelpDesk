@@ -46,7 +46,7 @@ export const UpdateTicket = () => {
 
     try {
       await api.updateTicket(ticketId, { title, description, category, priority, status });
-      navigate(`/ticket/${ticketId}`);
+      navigate(`../ticket/${ticketId}`);
     } catch (err) {
       setError(err.message || 'Failed to update ticket.');
       setSubmitting(false);
@@ -58,7 +58,7 @@ export const UpdateTicket = () => {
 
   return (
     <div className="fade-in" style={{ maxWidth: '600px', margin: '0 auto' }}>
-      <button onClick={() => navigate(`/ticket/${ticketId}`)} className="btn btn-secondary" style={{ marginBottom: '24px' }}>
+      <button onClick={() => navigate(`../ticket/${ticketId}`)} className="btn btn-secondary" style={{ marginBottom: '24px' }}>
         <ArrowLeft size={16} /> Back to Ticket
       </button>
 
