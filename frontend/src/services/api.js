@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5007/api';
+const BASE_URL = 'https://helpdesk-n6cw.onrender.com/api';
 
 const isTokenExpired = (token) => {
   if (!token) return true;
