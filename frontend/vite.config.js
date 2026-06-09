@@ -59,6 +59,11 @@ export default defineConfig({
           singleton: true,
           requiredVersion: false,
         },
+
+        "react-router": {
+          singleton: true,
+          requiredVersion: false,
+        },
       },
     }),
 
