@@ -112,4 +112,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/", () => new
+{
+    Status = "Running",
+    Service = "HelpDesk API"
+});
+
 app.Run();
