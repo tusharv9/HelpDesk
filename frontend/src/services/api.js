@@ -1,5 +1,20 @@
 const BASE_URL = 'http://localhost:5007/api';
 
+const isTokenExpired = (token) => {
+  if (!token) return true;
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return true;
+    // Decode base64url payload
+    const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+    if (!payload.exp) return false;
+    const now = Math.floor(Date.now() / 1000);
+    return payload.exp < now;
+  } catch (e) {
+    return true;
+  }
+};
+
 export const getCurrentUser = () => {
   const user = localStorage.getItem('helpdesk_user');
   return user ? JSON.parse(user) : { username: 'john_doe', role: 'Operator' };
@@ -19,7 +34,9 @@ export const getAuthToken = async () => {
     try {
       const parsed = JSON.parse(cached);
       if (parsed.username === user.username && parsed.role === user.role) {
-        return parsed.token;
+        if (!isTokenExpired(parsed.token)) {
+          return parsed.token;
+        }
       }
     } catch {
       localStorage.removeItem('helpdesk_token');
@@ -57,6 +74,31 @@ const getHeaders = async () => {
   return headers;
 };
 
+const request = async (endpoint, options = {}) => {
+  const headers = await getHeaders();
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      ...headers,
+      ...options.headers,
+    },
+  });
+
+  if (res.status === 401) {
+    localStorage.removeItem('helpdesk_token');
+  }
+
+  if (!res.ok) {
+    throw new Error(await res.text() || `Request failed with status ${res.status}`);
+  }
+
+  if (res.status === 204) {
+    return;
+  }
+
+  return res.json();
+};
+
 export const api = {
   getTickets: async (filters) => {
     const params = new URLSearchParams();
@@ -64,94 +106,59 @@ export const api = {
     if (filters?.priority) params.append('priority', filters.priority);
     if (filters?.assignedTo) params.append('assignedTo', filters.assignedTo);
     
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket?${params.toString()}`, { headers });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to fetch tickets');
-    return res.json();
+    return request(`/ticket?${params.toString()}`);
   },
 
   getTicket: async (id) => {
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket/${id}`, { headers });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to fetch ticket');
-    return res.json();
+    return request(`/ticket/${id}`);
   },
 
   createTicket: async (ticket) => {
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket`, {
+    return request(`/ticket`, {
       method: 'POST',
-      headers,
       body: JSON.stringify(ticket),
     });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to create ticket');
-    return res.json();
   },
 
   updateTicket: async (id, ticket) => {
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket/${id}`, {
+    return request(`/ticket/${id}`, {
       method: 'PUT',
-      headers,
       body: JSON.stringify(ticket),
     });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to update ticket');
-    return res.json();
   },
 
   deleteTicket: async (id) => {
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket/${id}`, {
+    return request(`/ticket/${id}`, {
       method: 'DELETE',
-      headers,
     });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to delete ticket');
   },
 
   updateStatus: async (id, status) => {
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket/${id}/status`, {
+    return request(`/ticket/${id}/status`, {
       method: 'PATCH',
-      headers,
       body: JSON.stringify({ status }),
     });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to update status');
-    return res.json();
   },
 
   assignTicket: async (id, assignedTo) => {
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket/${id}/assign`, {
+    return request(`/ticket/${id}/assign`, {
       method: 'PATCH',
-      headers,
       body: JSON.stringify({ assignedTo }),
     });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to assign ticket');
-    return res.json();
   },
 
   addComment: async (ticketId, commentText) => {
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket/${ticketId}/comments`, {
+    return request(`/ticket/${ticketId}/comments`, {
       method: 'POST',
-      headers,
       body: JSON.stringify({ commentText }),
     });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to add comment');
-    return res.json();
   },
 
   getComments: async (ticketId) => {
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket/${ticketId}/comments`, { headers });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to fetch comments');
-    return res.json();
+    return request(`/ticket/${ticketId}/comments`);
   },
 
   getHistory: async (ticketId) => {
-    const headers = await getHeaders();
-    const res = await fetch(`${BASE_URL}/ticket/${ticketId}/history`, { headers });
-    if (!res.ok) throw new Error(await res.text() || 'Failed to fetch history');
-    return res.json();
+    return request(`/ticket/${ticketId}/history`);
   },
 };
